@@ -473,6 +473,7 @@ local servers = {
   sqlls = {},
   taplo = {},
   terraformls = {},
+  -- tflint = {},
   lemminx = {},
   -- yamlls = {},
 }
