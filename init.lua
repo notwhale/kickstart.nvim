@@ -64,13 +64,14 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
+  'b0o/schemastore.nvim',
 
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  -- 'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -131,11 +132,12 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        -- icons_enabled = true,
+        theme = 'auto',
         -- theme = 'onedark',
-        theme = 'gruvbox',
-        component_separators = '|',
-        section_separators = '',
+        -- theme = 'gruvbox',
+        -- component_separators = '|',
+        -- section_separators = '',
       },
     },
   },
@@ -466,16 +468,66 @@ local servers = {
   -- ansiblels = {},
   bashls = {},
   dockerls = {},
-  docker_compose_language_service = {},
+  -- docker_compose_language_service = {},
   jsonnet_ls = {},
   marksman = {},
   pyright = {},
-  sqlls = {},
-  taplo = {},
+  -- sqlls = {},
+  -- taplo = {},
   terraformls = {},
-  -- tflint = {},
-  lemminx = {},
-  -- yamlls = {},
+  -- lemminx = {},
+  -- yamlls = {
+  -- settings = {
+  yamlls = {
+    yaml = {
+      -- schemaStore = {
+      -- enable = true,
+      --   url = "https://www.schemastore.org/json",
+      -- },
+      schemas = {
+        --   -- kubernetes = "*.yaml",
+        -- ["http://json.schemastore.org/composer"] = "/*",
+        --   ["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/inventory.json"] = "{*inventory*,*hosts*}",
+        --   ["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks"] = "roles/tasks/*.{yml,yaml}",
+        --   ["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook"] = "*play*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook"] = "/*",
+        -- ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+        -- ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = "azure-pipelines.yml",
+        -- ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+        -- ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+        -- ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+        -- ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+        -- ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = "*gitlab-ci*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+      },
+      format = {
+        enable = true,
+        singleQuote = true,
+        printWidth = 120,
+      },
+      validate = true,
+      completion = true,
+      hover = true,
+    },
+  },
+}
+
+local tools = {
+  -- Formatter
+  "black",
+  "prettier",
+  "stylua",
+  "shfmt",
+  -- "yamlfmt",
+  -- Linter
+  "shellcheck",
+  "tflint",
+  "yamllint",
+  -- DAP
+  -- "debugpy",
 }
 
 -- Setup neovim lua configuration
@@ -487,6 +539,13 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Setup mason so it can manage external tooling
 require('mason').setup()
+local mr = require("mason-registry")
+for _, tool in ipairs(tools) do
+  local p = mr.get_package(tool)
+  if not p:is_installed() then
+    p:install()
+  end
+end
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'

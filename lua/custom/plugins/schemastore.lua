@@ -1,0 +1,30 @@
+return {}
+-- return {
+--   'b0o/schemastore.nvim',
+--   config = function()
+--     require('lspconfig').yamlls.setup {
+--       settings = {
+--         yaml = {
+--           schemas = require('schemastore').yaml.schemas {
+--             select = {
+--               'Ansible Argument Specs',
+--               'Ansible Collection Galaxy',
+--               'Ansible Execution Environment',
+--               'Ansible Inventory',
+--               'Ansible Meta',
+--               'Ansible Meta Runtime',
+--               'Ansible Navigator Configuration',
+--               'Ansible Playbook',
+--               'Ansible Requirements',
+--               'Ansible Rulebook',
+--               'Ansible Tasks File',
+--               'Ansible Vars File',
+--               'Ansible-lint Configuration',
+--             },
+--           },
+--           validate = { enable = true },
+--         },
+--       },
+--     }
+--   end,
+-- }
